@@ -1,0 +1,13 @@
+<h1>{{ question.question_text }}</h1>
+<!--question 객체의 question_text 속성을 출력하여 HTML <h1> 요소에 질문 텍스트를 표시.-->
+   
+<ul>
+{% for choice in question.choice_set.all %}
+ <!--question 객체의 choice_set을 사용하여 해당 질문의 외래키에 속한 모든 선택지를 가져온다.-->
+<!--자주쓰는 코드방식이라 외움-->
+ <!--for 루프를 사용하여 각 선택지의 choice_text 속성을 출력하여 HTML <ul> 밑에 리스트 아이템(<li>)으로 표시-->
+    <li>{{ choice.choice_text }}</li>
+{% endfor %}
+</ul>
+<!--템플릿 시스템은 변수의 속성에 접근하기 위해 점-탐색(dot-lookup) 문법을 사용한다. 예제의 {{ question.question_text }} 구문을 보면, Django는 먼저 question 객체에 대해 사전형으로 탐색한다. 
+    탐색에 실패하게 되면 속성값으로 탐색한다. 만약 속성 탐색에도 실패한다면 리스트의 인덱스 탐색을 시도하게 됩니다.-->

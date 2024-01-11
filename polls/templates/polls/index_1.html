@@ -1,0 +1,29 @@
+{% if latest_question_list %}
+<!--views.py로부터 받아서-->
+    <ul>
+    {% for question in latest_question_list %}
+
+    <!--12.하드코딩된 URL 제거-->
+        <!--<li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>-->
+    
+        <!--12.하드코딩된 URL 제거수정-->
+    <!--polls.urls 모듈에 서술된 URL 의 정의를 탐색하는 식으로 동작-->  
+    {#<li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>#}
+ 
+        
+        <!--13.URL의 이름공간 정하기-->
+        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+
+        <!--http://127.0.0.1:8000/polls/2/-->
+
+    {% endfor %}
+    </ul>
+    <!--화면에 리스트로 출력-->
+
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+<!--내용없으면 No polls are available.출력-->
+
+

@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "polls.apps.PollsConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -54,7 +55,12 @@ ROOT_URLCONF = "mysite.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        # "DIRS": [],
+        
+        # 30_1 프로젝트의 템플릿 커스터마이징 추가
+        "DIRS": [BASE_DIR / "templates"],
+        # DIRS는 Django 템플릿을 로드 할 때 검사 할 파일 시스템 디렉토리 목록이다 바로 검색 경로이다.
+        
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

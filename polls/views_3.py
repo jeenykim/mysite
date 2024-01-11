@@ -2,9 +2,10 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
-from django.utils import timezone
 
 from .models import Choice,Question
+
+# 함수기반뷰를 충분히 연습해야함
 
 # Django의 제네릭 뷰를 사용할 때, 각 뷰가 어떤 모델과 상호 작용할지를 정의해야 한다
 # 이를 위해서는 model 속성을 사용하거나 (model = Question와 같이) get_queryset() 메서드를 정의하여 제공해야 한다
@@ -37,25 +38,15 @@ class IndexView(generic.ListView):
     # 이것을 덮어 쓰려면 context_object_name 속성을 제공하고, 대신에 latest_question_list 를 사용하도록 지정해야한다. 
     # 새로운 기본 컨텍스트 변수와 일치하도록 템플릿을 변경할 수도 있지만, 원하는 변수를 사용하도록 Django에게 지시하는 것이 훨씬 쉽다.
     
-    # def get_queryset(self):
-    #     return Question.objects.order_by("-pub_date")[:5]
+    def get_queryset(self):
+        return Question.objects.order_by("-pub_date")[:5]
     
     #마지막에 발행된 다섯 개의 질문을 화면에 반환한다.
     # get_queryset 메서드는 제네릭 뷰에서 특정 쿼리셋을 정의하는 데 사용된다.
     # 이 메서드에서는 Question 모델의 객체들을 pub_date를 기준으로 내림차순으로 정렬하고, 처음 다섯 개의 객체만을 포함하는 쿼리셋을 반환한다.
     # 이렇게 정의된 쿼리셋은 해당 뷰에서 사용되어 클라이언트에게 제공된다.
-    #########################
     
-    # 22. 뷰 개선시키기
-    # get_queryset 메소드를 수정
-    # get_queryset() 메소드를 수정하여 timezone.now()와 비교하여 날짜를 검사하도록 변경해야 한다. 
-    # 1.먼저 가져 오기를 추가
-    
-    def get_queryset(self):
-        return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
-    # Question.objects.filter (pub_date__lte = timezone.now ())는 timezone.now보다 pub_date가 작거나 같은 Question을 포함하는 queryset을 반환한다.
-
-       
+   
 class DetailView(generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
@@ -65,24 +56,6 @@ class DetailView(generic.DetailView):
     # Django의 Question 클래스는 데이터베이스에서 질문을 나타내기 위한 모델(Model) 클래스이다. 
     # Django에서는 모델을 사용하여 데이터베이스 테이블을 정의하고 데이터에 접근하는 방법을 제공한다. 
     # Question 모델은 대부분의 웹 애플리케이션에서 사용되는 데이터를 저장하는 데 예시로 사용되는 일반적인 모델이다. 
-    
-    # 24.DetailView 테스트하기 추가 
-    # 미래의 설문들은 목록에 나타나지는 않지만, 사용자가 URL을 알고 있거나, 추측하면 접근할 수 있다.
-    
-    # Django의 DetailView에서 사용되는 get_queryset 메서드를 재정의하고 있다. 
-    # 해당 메서드는 Question 모델에서 조회된 결과를 반환하는데, 
-    # 여기서는 아직 발행되지 않은 질문은 제외한다.  
-    
-    def get_queryset(self):
-        """
-       현재 시간 이전에 발행되지 않은 모든 질문을 제외한다.
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now())
-    # Question 모델에서 쿼리셋을 가져온다.
-    # pub_date 필드(질문의 발행일자)가 현재 시간 이전이거나 현재 시간인 질문만을 선택한다. 
-    # lte는 "작거나 같음"을 의미한다.
-    # get_queryset 메서드는 현재 시간 이전에 발행된 질문들만을 조회하여 반환한다. 
-    # 이것은 일반적으로 미래에 발행될 예정인 질문들을 현재 뷰에서 숨기기 위해 사용된다.
 
 
 class ResultsView(generic.DetailView):
